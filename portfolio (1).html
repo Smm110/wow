@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Портфолио — Motion Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --border: rgba(255,255,255,0.08);
+    --accent: #c8ff00;
+    --accent-dim: rgba(200,255,0,0.12);
+    --text: #f0f0f0;
+    --muted: #888;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 4rem;
+    background: rgba(10,10,10,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* mobile burger */
+  .burger {
+    display: none;
+    flex-direction: column; gap: 5px;
+    cursor: pointer; padding: 4px;
+    background: none; border: none;
+  }
+  .burger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.25s;
+  }
+  .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .burger.open span:nth-child(2) { opacity: 0; }
+  .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed; top: 57px; left: 0; right: 0; z-index: 99;
+    background: rgba(10,10,10,0.97);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem;
+    flex-direction: column; gap: 1.5rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-family: var(--mono);
+    letter-spacing: 0.06em;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--accent); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .hero-title {
+    font-size: clamp(2.8rem, 8vw, 7rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 900px;
+  }
+  .hero-title em { font-style: normal; color: var(--accent); }
+  .hero-sub {
+    margin-top: 2rem;
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 480px;
+    line-height: 1.8;
+  }
+  .hero-cta {
+    margin-top: 3rem;
+    display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;
+  }
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    background: var(--accent);
+    color: #0a0a0a;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: var(--text); }
+
+  .hero-grid-accent {
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    width: 380px; height: 380px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .hero-grid-accent::before {
+    content: '';
+    width: 240px; height: 240px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    position: absolute;
+  }
+  .hero-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 20px var(--accent);
+  }
+
+  /* SECTIONS */
+  section { padding: 6rem 4rem; }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; max-width: 60px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  /* ABOUT */
+  #about .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    margin-top: 2rem;
+  }
+  .about-text { color: var(--muted); font-size: 1.05rem; line-height: 1.9; }
+  .about-text p + p { margin-top: 1rem; }
+  .skills-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; list-style: none; }
+  .skills-list li {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .skills-list li::before { content: '▸'; color: var(--accent); font-size: 10px; }
+
+  /* PORTFOLIO */
+  #portfolio { background: var(--surface); }
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .work-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .work-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+  /* thumb */
+  .work-thumb {
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+    background: #111;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .work-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease, opacity 0.3s;
+    /* placeholder tint if no real image */
+    background: #1a1a1a;
+  }
+  .work-card:hover .work-thumb img { transform: scale(1.04); }
+  .work-thumb.playing img { opacity: 0; pointer-events: none; }
+
+  .work-thumb video {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: none;
+    background: #000;
+  }
+  .work-thumb.playing video { display: block; }
+
+  /* hover overlay */
+  .play-overlay {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 10px;
+    background: rgba(0,0,0,0.45);
+    opacity: 0;
+    transition: opacity 0.25s;
+    z-index: 5;
+  }
+  .work-thumb:hover .play-overlay { opacity: 1; }
+  .work-thumb.playing .play-overlay { display: none; }
+
+  /* on touch screens show overlay always as a hint */
+  @media (hover: none) {
+    .play-overlay {
+      opacity: 1;
+      background: rgba(0,0,0,0.28);
+    }
+  }
+
+  .play-btn {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: rgba(10,10,10,0.55);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    flex-shrink: 0;
+  }
+  .play-btn:hover,
+  .play-btn:active { background: var(--accent); transform: scale(1.08); }
+  .play-btn:hover svg,
+  .play-btn:active svg { fill: #0a0a0a; }
+  .play-btn svg { width: 22px; height: 22px; fill: var(--accent); margin-left: 4px; }
+
+  .play-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  /* video controls */
+  .video-controls {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 10px 12px 10px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.88));
+    display: none;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+  }
+  .work-thumb.playing .video-controls { display: flex; }
+
+  .vc-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 6px; display: flex; align-items: center;
+    flex-shrink: 0; touch-action: manipulation;
+  }
+  .vc-btn svg { width: 18px; height: 18px; fill: #fff; display: block; }
+
+  .vc-progress {
+    flex: 1; height: 4px;
+    -webkit-appearance: none; appearance: none;
+    background: rgba(255,255,255,0.25);
+    border-radius: 2px; cursor: pointer; outline: none;
+    min-width: 0;
+  }
+  .vc-progress::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+  }
+  .vc-progress::-moz-range-thumb {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none; cursor: pointer;
+  }
+
+  .vc-time {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.7);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* tag */
+  .work-tag {
+    position: absolute; top: 12px; right: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 4px 10px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    z-index: 6;
+  }
+
+  .work-body { padding: 1.25rem; }
+  .work-title { font-size: 1.05rem; font-weight: 500; margin-bottom: 0.4rem; }
+  .work-desc { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 3rem;
+  }
+  .service-item {
+    padding: 2rem;
+    background: var(--bg);
+    border-right: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .service-item:last-child { border-right: none; }
+  .service-item:hover { background: var(--accent-dim); }
+  .service-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+  .service-name { font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem; }
+  .service-desc { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+  /* CONTACT */
+  #contact { text-align: center; background: var(--surface); }
+  .contact-sub {
+    color: var(--muted); font-size: 1rem;
+    max-width: 400px; margin: 1rem auto 3rem; line-height: 1.8;
+  }
+  .contact-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+  .contact-link {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: var(--mono); font-size: 13px;
+    color: var(--muted); text-decoration: none;
+    letter-spacing: 0.05em;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    transition: color 0.2s, border-color 0.2s;
+    min-height: 48px;
+  }
+  .contact-link:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--muted); font-size: 12px; font-family: var(--mono);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { display: none; }
+    .burger { display: flex; }
+
+    #hero { padding: 7rem 1.25rem 3rem; }
+    section { padding: 4rem 1.25rem; }
+
+    .hero-grid-accent { display: none; }
+    #about .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .skills-list { grid-template-columns: 1fr; }
+
+    .works-grid { grid-template-columns: 1fr; }
+    .work-thumb { height: 200px; }
+
+    /* on mobile make play btn larger for touch */
+    .play-btn { width: 68px; height: 68px; }
+
+    .services-grid { grid-template-columns: 1fr; }
+    .service-item { border-right: none; border-bottom: 1px solid var(--border); }
+
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.5rem; }
+
+    .contact-link { flex: 1 1 140px; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">ABLMANSUR.KZ</span>
+  <ul class="nav-links">
+    <li><a href="#about">Обо мне</a></li>
+    <li><a href="#portfolio">Работы</a></li>
+    <li><a href="#services">Услуги</a></li>
+    <li><a href="#contact">Контакт</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<nav class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMobile()">Обо мне</a>
+  <a href="#portfolio" onclick="closeMobile()">Работы</a>
+  <a href="#services" onclick="closeMobile()">Услуги</a>
+  <a href="#contact" onclick="closeMobile()">Контакт</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-eyebrow">Motion Designer · Astana, KZ</p>
+  <h1 class="hero-title">
+    Я создаю<br>
+    визуальный<br>
+    <em>движущийся</em><br>
+    контент
+  </h1>
+  <p class="hero-sub">
+    After Effects, motion graphics, видеомонтаж — превращаю идеи в брендовые видео, которые запоминаются.
+  </p>
+  <div class="hero-cta">
+    <a href="#portfolio" class="btn-primary">Смотреть работы</a>
+    <a href="#contact" class="btn-ghost">Написать мне</a>
+  </div>
+  <div class="hero-grid-accent"><div class="hero-dot"></div></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label">Обо мне</p>
+  <h2 class="section-title">Motion designer<br>с фокусом на бренды</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>Работаю с After Effects и Premiere Pro, специализируюсь на брендовом контенте, motion graphics и монтаже рекламных видео. Делаю проекты под Instagram Reels, TikTok и презентации.</p>
+      <p>Сотрудничаю с экспертами, бизнесами и креативными командами в Казахстане. Умею работать быстро, держу дедлайны и предлагаю готовые решения — без лишних правок.</p>
+    </div>
+    <div>
+      <ul class="skills-list">
+        <li>After Effects</li>
+        <li>Adobe Premiere Pro</li>
+        <li>Motion Graphics</li>
+        <li>Reels / TikTok монтаж</li>
+        <li>Branding видео</li>
+        <li>Анимация текста</li>
+        <li>Цветокоррекция</li>
+        <li>Storyboard</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <p class="section-label">Работы</p>
+  <h2 class="section-title">Избранные проекты</h2>
+
+  <div class="works-grid">
+
+    <!-- КАРТОЧКА 1
+         Замени src у <img> на путь к своей обложке: src="images/cover1.jpg"
+         Замени src у <video> на путь к своему видео:  src="videos/project1.mp4"
+    -->
+    <div class="work-card">
+      <div class="work-thumb" onclick="togglePlay(this)">
+        <img src="дорогое_превью_для_видео_202606161138.jpeg" alt="Финансовые Reels">
+        <video src="Новая реклама Nike [get.gt].mp4" preload="none" playsinline></video>
+        <span class="work-tag">Reels</span>
+        <div class="play-overlay">
+          <div class="play-btn">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <span class="play-label">Воспроизвести видео</span>
+        </div>
+        <div class="video-controls">
+          <button class="vc-btn" onclick="vcPlayPause(event,this)" title="Пауза/Воспроизведение">
+            <svg class="ico-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+          <input type="range" class="vc-progress" value="0" min="0" max="100" step="0.1"
+                 oninput="vcSeek(event,this)" title="Перемотка">
+          <span class="vc-time">0:00</span>
+          <button class="vc-btn vc-mute" onclick="vcMute(event,this)" title="Звук">
+            <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="work-body">
+        <h3 class="work-title">Финансовые Reels</h3>
+        <p class="work-desc">Motion graphics ролики для финансового эксперта — ипотека, инвестиции, личные финансы.</p>
+      </div>
+    </div>
+
+    <!-- КАРТОЧКА 2 -->
+    <div class="work-card">
+      <div class="work-thumb" onclick="togglePlay(this)">
+        <img src="aitu.jpg" alt="Промо университета">
+        <video src="Новая реклама Nike [get.gt].mp4" preload="none" playsinline></video>
+        <span class="work-tag">Promo</span>
+        <div class="play-overlay">
+          <div class="play-btn">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <span class="play-label">Воспроизвести видео</span>
+        </div>
+        <div class="video-controls">
+          <button class="vc-btn" onclick="vcPlayPause(event,this)" title="Пауза/Воспроизведение">
+            <svg class="ico-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+          <input type="range" class="vc-progress" value="0" min="0" max="100" step="0.1"
+                 oninput="vcSeek(event,this)">
+          <span class="vc-time">0:00</span>
+          <button class="vc-btn vc-mute" onclick="vcMute(event,this)">
+            <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="work-body">
+        <h3 class="work-title">Промо для университета</h3>
+        <p class="work-desc">Рекламный ролик для Astana IT University College — концепт, раскадровка, монтаж.</p>
+      </div>
+    </div>
+
+    <!-- КАРТОЧКА 3 -->
+    <div class="work-card">
+      <div class="work-thumb" onclick="togglePlay(this)">
+        <img src="Превью_для_брендовых_видео_202606161147.jpeg" alt="Брендовый контент">
+        <video src="Новая реклама Nike [get.gt].mp4" preload="none" playsinline></video>
+        <span class="work-tag">Branded</span>
+        <div class="play-overlay">
+          <div class="play-btn">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <span class="play-label">Воспроизвести видео</span>
+        </div>
+        <div class="video-controls">
+          <button class="vc-btn" onclick="vcPlayPause(event,this)">
+            <svg class="ico-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+          <input type="range" class="vc-progress" value="0" min="0" max="100" step="0.1"
+                 oninput="vcSeek(event,this)">
+          <span class="vc-time">0:00</span>
+          <button class="vc-btn vc-mute" onclick="vcMute(event,this)">
+            <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="work-body">
+        <h3 class="work-title">Брендовый контент</h3>
+        <p class="work-desc">Серия видео для Instagram бизнеса — анимированные заставки и переходы.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <p class="section-label">Услуги</p>
+  <h2 class="section-title">Что я делаю</h2>
+  <div class="services-grid">
+    <div class="service-item">
+      <div class="service-icon">✦</div>
+      <h3 class="service-name">Motion Graphics</h3>
+      <p class="service-desc">Анимация логотипов, заставки, переходы, анимированные тексты и инфографика.</p>
+    </div>
+    <div class="service-item">
+      <div class="service-icon">◈</div>
+      <h3 class="service-name">Видеомонтаж</h3>
+      <p class="service-desc">Монтаж Reels, TikTok, рекламных роликов и корпоративных видео под ключ.</p>
+    </div>
+    <div class="service-item">
+      <div class="service-icon">⬡</div>
+      <h3 class="service-name">Промо-видео</h3>
+      <p class="service-desc">Концепция, сценарий, съёмка и производство рекламного видео для бизнеса.</p>
+    </div>
+    <div class="service-item">
+      <div class="service-icon">◎</div>
+      <h3 class="service-name">Контент-пакет</h3>
+      <p class="service-desc">Готовый пакет видеоконтента для ведения Instagram или TikTok — 4–10 роликов в месяц.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label" style="justify-content:center;">Контакт</p>
+  <h2 class="section-title">Обсудим проект?</h2>
+  <p class="contact-sub">Пишите в Telegram или Instagram — отвечаю быстро и предлагаю конкретные решения.</p>
+  <div class="contact-links">
+    <a href="https://t.me/ваш_ник" class="contact-link">✈ Telegram</a>
+    <a href="https://instagram.com/ваш_ник" class="contact-link">◈ Instagram</a>
+    <a href="mailto:ваш@email.com" class="contact-link">✉ Email</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 Ablmansur — Motion Designer</span>
+  <span>Astana, Kazakhstan</span>
+</footer>
+
+<script>
+/* ── BURGER MENU ── */
+const burger = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobileMenu');
+burger.addEventListener('click', () => {
+  burger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+function closeMobile() {
+  burger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+}
+
+/* ── VIDEO PLAYER ── */
+function fmt(s) {
+  const m = Math.floor(s / 60);
+  return m + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+}
+
+function togglePlay(thumb) {
+  const video = thumb.querySelector('video');
+  if (!video.src || video.src === window.location.href) return; // нет видео — ничего не делаем
+
+  if (!thumb.classList.contains('playing')) {
+    // остановить все остальные
+    document.querySelectorAll('.work-thumb.playing').forEach(t => stopThumb(t));
+    thumb.classList.add('playing');
+    video.play();
+    bindProgress(thumb);
+  }
+}
+
+function stopThumb(thumb) {
+  const video = thumb.querySelector('video');
+  video.pause();
+  video.currentTime = 0;
+  thumb.classList.remove('playing');
+  const prog = thumb.querySelector('.vc-progress');
+  if (prog) prog.value = 0;
+  const time = thumb.querySelector('.vc-time');
+  if (time) time.textContent = '0:00';
+}
+
+function bindProgress(thumb) {
+  const video = thumb.querySelector('video');
+  const prog = thumb.querySelector('.vc-progress');
+  const time = thumb.querySelector('.vc-time');
+  video.ontimeupdate = () => {
+    if (!video.duration) return;
+    prog.value = (video.currentTime / video.duration) * 100;
+    time.textContent = fmt(video.currentTime);
+  };
+  video.onended = () => { stopThumb(thumb); };
+}
+
+function vcPlayPause(e, btn) {
+  e.stopPropagation();
+  const thumb = btn.closest('.work-thumb');
+  const video = thumb.querySelector('video');
+  if (video.paused) {
+    video.play();
+    btn.querySelector('svg').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+  } else {
+    video.pause();
+    btn.querySelector('svg').innerHTML = '<path d="M8 5v14l11-7z"/>';
+  }
+}
+
+function vcSeek(e, input) {
+  e.stopPropagation();
+  const video = input.closest('.work-thumb').querySelector('video');
+  if (video.duration) video.currentTime = (input.value / 100) * video.duration;
+}
+
+function vcMute(e, btn) {
+  e.stopPropagation();
+  const video = btn.closest('.work-thumb').querySelector('video');
+  video.muted = !video.muted;
+  btn.style.opacity = video.muted ? '0.4' : '1';
+}
+</script>
+</body>
+</html>
